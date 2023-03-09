@@ -13,6 +13,37 @@ namespace StudentScoreDemo
 		}
 
 		/// <summary>
+		/// 輸入多位學生成績, 直到輸入 'n' 為止
+		/// </summary>
+		/// <returns></returns>
+		static StudentCollection InputStudents()
+		{
+			List<Student> students = new List<Student>();
+
+			while (true)
+			{
+				students.Add(InputScore());
+
+				Console.Write("是否繼續輸入下一筆(y/n)？");
+				string input = Console.ReadLine();
+
+				while (input != "y" && input != "n")
+				{
+					Console.Write("輸入無效，請重新輸入(y/n)：");
+					input = Console.ReadLine();
+				}
+
+				if (input == "n")
+				{
+					break;
+				}
+			}
+
+			return new StudentCollection(students);
+		}
+
+
+		/// <summary>
 		/// 輸入一位學生成績
 		/// </summary>
 		/// <returns></returns>
@@ -85,5 +116,24 @@ namespace StudentScoreDemo
 		{
 			return $"{Name,-10}		學科:{Academic,3}分	術科:{Technical,3} 分  總成績:{Total,-5:F2} 分";
 		}
+	}
+
+	public class StudentCollection
+	{
+		private List<Student> _students;
+
+		public StudentCollection(List<Student> students)
+		{
+			_students = students;
+		}
+
+		// 取得最高分與最低分
+		public double MaxScore => _students.Max(s => s.Total);
+		public double MinScore => _students.Min(s => s.Total);
+
+		// 總平均
+		public double Average =>_students.Average(s => s.Total);
+
+		public int Count => _students.Count;
 	}
 }
