@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,6 +11,27 @@ namespace StudentScoreDemo
 	{
 		static void Main(string[] args)
 		{
+			var studentCollection = InputStudents();
+
+			Console.WriteLine("所有考生成績報表");
+			const int len = 30;
+			Console.WriteLine(new string('=', len));
+
+			int counter = 1;
+			foreach (var student in studentCollection)
+			{
+				Console.WriteLine($"序號 {counter++}:{student.ToString()}");
+			}
+
+			Console.WriteLine(new string('=', len));
+
+			Console.WriteLine($"實際到考人數: {studentCollection.Count} 人");
+
+			Console.WriteLine($"最高總分: {studentCollection.MaxScore:F2}分");
+			Console.WriteLine($"最低總分: {studentCollection.MinScore:F2}分");
+			Console.WriteLine($"所有考生總成績平均: {studentCollection.Average.ToString("F2").PadLeft(5)}");
+
+			Console.Read();
 		}
 
 		/// <summary>
@@ -118,7 +140,7 @@ namespace StudentScoreDemo
 		}
 	}
 
-	public class StudentCollection
+	public class StudentCollection:IEnumerable<Student>
 	{
 		private List<Student> _students;
 
@@ -135,5 +157,15 @@ namespace StudentScoreDemo
 		public double Average =>_students.Average(s => s.Total);
 
 		public int Count => _students.Count;
+
+		public IEnumerator<Student> GetEnumerator()
+		{
+            return _students.GetEnumerator();
+		}
+
+		IEnumerator IEnumerable.GetEnumerator()
+		{
+			return GetEnumerator();
+		}
 	}
 }
